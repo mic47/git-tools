@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ -z "$1" ]]; then
+  echo "You have to provide branch name"
+else 
+  git branch "$1.bck.${2:-1}" "$1" 2> /dev/null || git-backup "$1" $(expr ${2:-1} + 1)
+fi

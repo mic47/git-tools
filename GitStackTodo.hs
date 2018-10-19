@@ -9,7 +9,7 @@ import System.Process
 import Text.Printf
 
 getBranches :: String
-getBranches = "git branch -v | grep -v '^ [*]' |sed -e 's/^[*]//;s/^ *//;s/  */ /' | cut -f 1,2 -d ' ' | grep -v '[.]bck[.][0-9]*'"
+getBranches = "git branch -v | grep -v '^[*] ' |sed -e 's/^[*]//;s/^ *//;s/  */ /' | cut -f 1,2 -d ' ' | grep -v '[.]bck[.][0-9]*'"
 
 readShell :: String -> IO String
 readShell = flip readCreateProcess "" . shell

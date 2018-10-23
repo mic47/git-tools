@@ -1,0 +1,24 @@
+#!/bin/bash
+
+since=$1
+
+branches=$(
+  git log "$since"..HEAD --pretty=tformat:%D \
+    | tr ',' '\n' \
+    | sed -e 's/^.* -> //;s/^ *//' \
+    | grep -v '^$' \
+    | grep -v origin
+)
+
+current_branch=$(
+ git branch \
+   | grep \* \
+   | cut -d ' ' -f2
+)
+
+for branch in $branches ; do 
+  git checkout $branch
+  ${@:2}
+done
+
+git checkout $current_branch

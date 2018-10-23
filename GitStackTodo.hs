@@ -4,6 +4,7 @@ import qualified Data.HashMap.Strict as HashMap
 import Data.HashMap.Strict (HashMap)
 import Data.Monoid
 import Data.Maybe
+import Data.String.Utils
 import Options.Applicative
 import System.Process
 import Text.Printf
@@ -29,6 +30,15 @@ addBranchMove hm hash = case HashMap.lookup hash hm of
     (\branchName -> printf "exec git backup '%s' && git branch -f '%s' HEAD" branchName branchName)
     branchNames
   Nothing -> Nothing
+
+addCommands :: [String] -> HashMap String [String] -> String -> [String]
+addCommands commands hm hash = mconcat $ map
+  translate
+  commands
+  where
+    translate command = map ("exec " ++) $ case HashMap.lookup hash hm of
+      Just branchNames -> map (\branchName -> replace "$branch" branchName command) branchNames
+      Nothing -> [command]
 
 addScalaTest :: Options -> [String]
 addScalaTest options = case commands of 
@@ -111,7 +121,7 @@ main = do
   branches <- branchesMapping . map words . lines <$> readShell getBranches
   input <- map words . lines <$> getContents
   putStrLn $ unlines $ map unwords $ enrichLines 
-    [ whenInterestingCommit options branches (const (map ("exec " ++) $ commands options))
+    [ whenInterestingCommit options branches (addCommands (commands options) branches)
     , whenInterestingCommit options branches (const (addScalaTest options))
     , if moveBranches options then addBranchMove branches else const Nothing
     ]

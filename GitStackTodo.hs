@@ -63,11 +63,13 @@ whenInterestingCommit options hm func hash =
     else Nothing
 
 enrichLines :: [String -> Maybe [String]] -> [[String]] -> [[String]]
-enrichLines funcs = mconcat . map (\line -> line : pick line)
+enrichLines funcs = mconcat . map (\line -> line : afterHash line)
   where
-    pick :: [String] -> [[String]]
-    pick ("pick" : hash : _) = map (:[]) $ mconcat $ mapMaybe (\f -> f hash) funcs
-    pick _ = []
+    afterHash :: [String] -> [[String]]
+    afterHash (cmd : hash : _) 
+      | cmd `elem` ["pick", "edit", "squash", "drop", "reword", "fixup"] 
+      = map (:[]) $ mconcat $ mapMaybe (\f -> f hash) funcs
+    afterHash _ = []
 
 data Options = Options
   { moveBranches :: Bool

@@ -8,6 +8,8 @@ branches=$(
     | sed -e 's/^.* -> //;s/^ *//' \
     | grep -v '^$' \
     | grep -v origin \
+    | grep -v '^tag:' \
+    | grep -v '^develop$' \
     | tac
 )
 

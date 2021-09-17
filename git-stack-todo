@@ -1,7 +1,8 @@
 #!/bin/bash
 
 EXTRA_EXEC="$*"
-awk \
+tac \
+  | awk \
   -v extra_exec="$EXTRA_EXEC" \
   -v branches="$( \
   git branch -v \
@@ -28,6 +29,7 @@ awk \
   '
   BEGIN{
     patsplit(branches, a, "[^,:]*:",b);
+    first_done = 0;
     for (k in a){
       gsub("[:,]", "", a[k]);
       gsub("[:,]", "", b[k]);
@@ -41,13 +43,18 @@ awk \
     };
   } {
     if (($1 in x) && ($2 in c)) {
-      print($0);
+      if (first_done == 1) {
+        printf("exec git backup '"'"'%s'"'"' && git branch -f '"'"'%s'"'"' HEAD\n", c[$2], c[$2]);
+      } else {
+        first_done = 1
+      }
       if (extra_exec != "") {
         print("exec", extra_exec);
       }
-      printf("exec git backup '"'"'%s'"'"' && git branch -f '"'"'%s'"'"' HEAD\n", c[$2], c[$2]);
+      print($0);
     } else {
       print($0)
     }
-  }'
+  }' \
+  | tac
 

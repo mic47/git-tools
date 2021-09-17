@@ -5,6 +5,7 @@ deb_dir: git-* debian.control
 	cp debian.control "$(WORKING_DIR)"/DEBIAN/control
 	mkdir -p "$(WORKING_DIR)"/usr/bin/
 	cp git-* "$(WORKING_DIR)"/usr/bin/
+	curl https://raw.githubusercontent.com/git/git/master/contrib/workdir/git-new-workdir > "$(WORKING_DIR)"/usr/bin/git-new-workdir
 
 deb: deb_dir
 	dpkg-deb --build "$(WORKING_DIR)" package.deb

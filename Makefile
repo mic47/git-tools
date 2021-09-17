@@ -12,5 +12,5 @@ deb: deb_dir
 clean:
 	rm -r "$(WORKING_DIR)" package.deb
 
-install: 
+install: deb
 	sudo dpkg -i package.deb

@@ -4,7 +4,6 @@ Section: custom
 Priority: optional
 Architecture: all
 Essential: no
-Installed-Size: 1024
 Maintainer: https://github.com/mic47/
-Description: Tools for working with git & stack pull requests.
+Description: Tools for working with git & stack pull requests. https://github.com/mic47/git-tools
 Depends: git, awk, coreutils

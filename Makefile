@@ -15,3 +15,6 @@ clean:
 
 install: deb
 	sudo dpkg -i package.deb
+
+install-local: git-*
+	ls git* | parallel ln -s $(shell pwd)/{} ~/.local/bin/{}

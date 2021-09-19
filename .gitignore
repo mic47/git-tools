@@ -20,5 +20,5 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
-_deb
 package.deb
+_deb/
